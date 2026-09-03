@@ -1,0 +1,48 @@
+# Shared shell environment and aliases.
+
+if [ "${DOTFILES_COMMON_LOADED:-0}" = 1 ]; then
+    return 0 2>/dev/null || true
+fi
+export DOTFILES_COMMON_LOADED=1
+
+export PATH="$HOME/.local/bin:$PATH"
+export EDITOR="${EDITOR:-nvim}"
+export VISUAL="${VISUAL:-$EDITOR}"
+export LANG="${LANG:-en_US.UTF-8}"
+export LC_ALL="${LC_ALL:-en_US.UTF-8}"
+
+alias ls='eza'
+alias l='eza'
+alias ll='eza -lah --git'
+alias la='eza -a'
+alias lt='eza --tree --level=2'
+
+alias cat='bat'
+alias grep='rg'
+
+alias g='git'
+alias gs='git status'
+alias gd='git diff'
+alias gl='git log --oneline --graph --decorate'
+alias lg='lazygit'
+
+alias v='nvim'
+alias vim='nvim'
+alias zj='zellij'
+
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+case "${OSTYPE:-}" in
+    darwin*)
+    alias copy='pbcopy'
+    alias paste='pbpaste'
+    ;;
+esac
+
+# Optional per-machine values and aliases. Never commit this file.
+if [ -f "$HOME/.config/dotfiles/local.sh" ]; then
+    # shellcheck disable=SC1091
+    . "$HOME/.config/dotfiles/local.sh"
+fi

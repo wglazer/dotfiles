@@ -1,0 +1,20 @@
+# macOS and editor noise
+.DS_Store
+*.swp
+*.swo
+*.bak
+
+# Shell history and local overrides
+.zsh_history
+.bash_history
+.shell_local
+.config/dotfiles/local.sh
+
+# Credential-bearing or runtime configuration
+.config/gh/hosts.yml
+.config/op/
+vscode/User/globalStorage/
+vscode/User/workspaceStorage/
+
+# Local bootstrap backups
+.dotfiles-backups/

@@ -1,0 +1,31 @@
+add_newline = false
+
+format = """
+$directory\
+$git_branch\
+$git_status\
+$python\
+$nodejs\
+$rust\
+$cmd_duration\
+$line_break\
+$character"""
+
+[directory]
+truncation_length = 4
+
+[git_branch]
+symbol = "git:"
+
+[cmd_duration]
+min_time = 2000
+
+[python]
+symbol = "py:"
+
+[nodejs]
+symbol = "node:"
+
+[character]
+success_symbol = "❯"
+error_symbol = "❯"
