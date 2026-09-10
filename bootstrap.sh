@@ -135,6 +135,16 @@ link_config() {
 }
 
 
+configure_git_delta() {
+    if [ "$DRY_RUN" -eq 1 ]; then
+        printf '[dry-run] Would configure Git to use delta for diffs.\n'
+        return 0
+    fi
+
+    git config --global core.pager delta
+    git config --global interactive.diffFilter 'delta --color-only'
+}
+
 
 if [ "$SKIP_BREW" -eq 0 ]; then
     install_brew
@@ -156,6 +166,7 @@ link_config "$REPO_DIR/.config/ghostty/config.ghostty" "$HOME/.config/ghostty/co
 link_config "$REPO_DIR/vscode/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
 link_config "$REPO_DIR/vscode/keybindings.json" "$HOME/Library/Application Support/Code/User/keybindings.json"
 
+configure_git_delta
 
 fi
 
