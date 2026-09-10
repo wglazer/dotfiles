@@ -83,6 +83,8 @@ cask "font-jetbrains-mono-nerd-font"
 cask "ghostty"
 # Move and resize windows on macOS with keyboard shortcuts and snap areas
 cask "rectangle"
+# Prevent screen from shutting down
+cask "caffeine"
 
 ###################################
 # Containers
