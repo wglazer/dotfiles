@@ -9,6 +9,7 @@ setopt SHARE_HISTORY
 setopt EXTENDED_HISTORY
 
 # Completion
+fpath+=(~/.zfunc)
 autoload -Uz compinit
 compinit
 zstyle ':completion:*' menu select
