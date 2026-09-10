@@ -158,7 +158,6 @@ link_config "$REPO_DIR/.zprofile" "$HOME/.zprofile"
 link_config "$REPO_DIR/.bashrc" "$HOME/.bashrc"
 link_config "$REPO_DIR/.bash_profile" "$HOME/.bash_profile"
 link_config "$REPO_DIR/.shell_common" "$HOME/.shell_common"
-link_config "$REPO_DIR/bin/1password-auth" "$HOME/.local/bin/1password-auth"
 
 link_config "$REPO_DIR/.config/starship.toml" "$HOME/.config/starship.toml"
 link_config "$REPO_DIR/.config/ghostty/config.ghostty" "$HOME/.config/ghostty/config.ghostty"

@@ -75,7 +75,7 @@ brew "zellij"
 ###################################
 # macOS applications
 ###################################
-# Desktop app enables Touch ID integration for the CLI
+# Desktop app provides the CLI integration; enable it in Settings > Developer
 cask "1password"
 # Command-line interface for 1Password
 cask "1password-cli"
