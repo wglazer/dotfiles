@@ -11,6 +11,8 @@ REPO_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 DRY_RUN=0
 SKIP_BREW=0
 
+OP_ACCOUNT="${DOTFILES_OP_ACCOUNT:-osedea}"
+
 usage() {
     cat <<'EOF'
 Usage: ./bootstrap.sh [options]
@@ -132,6 +134,8 @@ link_config() {
     printf 'Linked %s -> %s\n' "$target" "$source"
 }
 
+
+
 if [ "$SKIP_BREW" -eq 0 ]; then
     install_brew
     install_brew_bundle
@@ -144,11 +148,15 @@ link_config "$REPO_DIR/.zprofile" "$HOME/.zprofile"
 link_config "$REPO_DIR/.bashrc" "$HOME/.bashrc"
 link_config "$REPO_DIR/.bash_profile" "$HOME/.bash_profile"
 link_config "$REPO_DIR/.shell_common" "$HOME/.shell_common"
+link_config "$REPO_DIR/bin/1password-auth" "$HOME/.local/bin/1password-auth"
 
 link_config "$REPO_DIR/.config/starship.toml" "$HOME/.config/starship.toml"
 link_config "$REPO_DIR/.config/ghostty/config.ghostty" "$HOME/.config/ghostty/config.ghostty"
 
 link_config "$REPO_DIR/vscode/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
 link_config "$REPO_DIR/vscode/keybindings.json" "$HOME/Library/Application Support/Code/User/keybindings.json"
+
+
+fi
 
 printf '\nDotfiles bootstrap complete.\n'

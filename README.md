@@ -17,6 +17,7 @@ Useful options:
 ```bash
 ./bootstrap.sh --dry-run
 ./bootstrap.sh --skip-brew
+./bootstrap.sh --restore-signing
 ```
 
 The script can be run repeatedly and determines its paths from the script location, so the current working directory does not matter.

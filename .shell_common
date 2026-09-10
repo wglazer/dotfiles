@@ -26,6 +26,22 @@ alias gd='git diff'
 alias gl='git log --oneline --graph --decorate'
 alias lg='lazygit'
 
+cz() {
+    case "${1:-}" in
+        commit|c)
+            local auth_helper="$HOME/.local/bin/1password-auth"
+            [ -x "$auth_helper" ] || {
+                printf '1Password auth helper is missing. Run ./bootstrap.sh first.\n' >&2
+                return 1
+            }
+            local session
+            session="$("$auth_helper")" || return
+            eval "$session"
+            ;;
+    esac
+    command cz "$@"
+}
+
 alias v='nvim'
 alias vim='nvim'
 alias zj='zellij'

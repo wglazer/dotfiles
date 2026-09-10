@@ -75,6 +75,8 @@ brew "zellij"
 ###################################
 # macOS applications
 ###################################
+# Desktop app enables Touch ID integration for the CLI
+cask "1password"
 # Command-line interface for 1Password
 cask "1password-cli"
 # JetBrains Mono patched with Nerd Fonts glyphs
