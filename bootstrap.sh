@@ -153,17 +153,23 @@ else
     printf 'Skipping Homebrew setup.\n'
 fi
 
-link_config "$REPO_DIR/.zshrc" "$HOME/.zshrc"
-link_config "$REPO_DIR/.zprofile" "$HOME/.zprofile"
-link_config "$REPO_DIR/.bashrc" "$HOME/.bashrc"
-link_config "$REPO_DIR/.bash_profile" "$HOME/.bash_profile"
-link_config "$REPO_DIR/.shell_common" "$HOME/.shell_common"
+HOME_FILES=(
+    .bash_profile
+    .bashrc
+    .shell_common
+    .zprofile
+    .zshrc
+    .ssh/config
+    .config/ghostty/config.ghostty
+    .config/starship.toml
+)
 
-link_config "$REPO_DIR/.config/starship.toml" "$HOME/.config/starship.toml"
-link_config "$REPO_DIR/.config/ghostty/config.ghostty" "$HOME/.config/ghostty/config.ghostty"
+for relative_path in "${HOME_FILES[@]}"; do
+    link_config "$REPO_DIR/home/$relative_path" "$HOME/$relative_path"
+done
 
-link_config "$REPO_DIR/vscode/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
-link_config "$REPO_DIR/vscode/keybindings.json" "$HOME/Library/Application Support/Code/User/keybindings.json"
+link_config "$REPO_DIR/apps/vscode/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
+link_config "$REPO_DIR/apps/vscode/keybindings.json" "$HOME/Library/Application Support/Code/User/keybindings.json"
 
 configure_git_delta
 

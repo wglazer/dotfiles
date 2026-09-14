@@ -83,6 +83,8 @@ cask "1password-cli"
 cask "font-jetbrains-mono-nerd-font"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
+# Code editor from Microsoft
+cask "visual-studio-code"
 # Move and resize windows on macOS with keyboard shortcuts and snap areas
 cask "rectangle"
 # Prevent screen from shutting down

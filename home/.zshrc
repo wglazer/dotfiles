@@ -1,3 +1,13 @@
+# Interactive zsh setup: history, completion, integrations, and prompt.
+
+# Load the shared environment for both login and non-login shells.
+. "$HOME/.shell_common"
+
+# OrbStack integration, when installed.
+if [ -f "$HOME/.orbstack/shell/init.zsh" ]; then
+    . "$HOME/.orbstack/shell/init.zsh"
+fi
+
 # History
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=100000
@@ -38,8 +48,6 @@ fi
 if command -v atuin >/dev/null 2>&1; then
     eval "$(atuin init zsh)"
 fi
-
-. "$HOME/.shell_common"
 
 if command -v starship >/dev/null 2>&1; then
     eval "$(starship init zsh)"

@@ -1,6 +1,15 @@
 # dotfiles
 
-Personal, public-safe macOS development environment configuration.
+Personal macOS terminal and development environment configuration.
+
+## Structure
+
+```text
+home/       Files linked into $HOME, keeping their final paths
+apps/vscode VS Code configuration with a custom destination
+bootstrap.sh
+Brewfile
+```
 
 ## Install
 
@@ -10,7 +19,10 @@ Clone the repository, enter it, and run:
 ./bootstrap.sh
 ```
 
-The bootstrap script installs Homebrew packages from `Brewfile`, then creates symlinks from the repository into your home directory. Existing files are moved to a timestamped directory under `~/.dotfiles-backups/` before they are replaced.
+The bootstrap script installs Homebrew packages from `Brewfile`, then creates
+symlinks from `home/` and `apps/vscode/` into their final locations. Existing
+files are moved to a timestamped directory under `~/.dotfiles-backups/` before
+they are replaced.
 
 Useful options:
 
@@ -24,11 +36,15 @@ The script can be run repeatedly and determines its paths from the script locati
 
 ## Managed configuration
 
-- Shell: `.zshrc`, `.zprofile`, `.bashrc`, `.bash_profile`, and `.shell_common`
+- Shell: `home/.zshrc`, `home/.zprofile`, `home/.bashrc`, `home/.bash_profile`, and `home/.shell_common`
+- SSH: `home/.ssh/config` (`ssh gpu1` and `ssh gpu2`)
 - Homebrew: `Brewfile`
-- CLI tools: Starship, Atuin, btop, GitHub CLI, Ghostty, and Zellij
-- VS Code: settings and keybindings
+- Tools and apps: Starship, Atuin, btop, GitHub CLI, Ghostty, and Zellij
+- VS Code: `apps/vscode/settings.json` and `apps/vscode/keybindings.json`
 
 ## Adding configuration
 
-Add portable, non-secret files to the repository using the same path they should have under `$HOME` when practical. Add special platform paths to `bootstrap.sh`, document them here, and update `.gitignore` for any generated or sensitive files.
+Add files destined for `$HOME` under `home/` using the same relative path.
+Put app-specific configurations that need custom destinations under `apps/`
+and add their link to `bootstrap.sh`. Update `.gitignore` for any generated or
+sensitive files.

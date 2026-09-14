@@ -5,16 +5,15 @@
 *.bak
 
 # Shell history and local overrides
-.zsh_history
-.bash_history
-.shell_local
-.config/dotfiles/local.sh
+home/.zsh_history
+home/.bash_history
 
 # Credential-bearing or runtime configuration
-.config/gh/hosts.yml
-.config/op/
-vscode/User/globalStorage/
-vscode/User/workspaceStorage/
+home/.config/gh/hosts.yml
+home/.config/op/
+home/.config/dotfiles/gpg-private-key.asc
+home/Library/Application Support/Code/User/globalStorage/
+home/Library/Application Support/Code/User/workspaceStorage/
 
 # Local bootstrap backups
 .dotfiles-backups/
