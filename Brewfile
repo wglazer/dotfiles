@@ -41,6 +41,8 @@ brew "git-delta"
 brew "gh"
 # Use Commitizen to create Conventional Commits interactively
 brew "commitizen"
+# Framework for managing and maintaining multi-language pre-commit hooks
+brew "pre-commit"
 
 ###################################
 # Development environments
