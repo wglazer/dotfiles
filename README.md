@@ -6,7 +6,7 @@ Personal macOS terminal and development environment configuration.
 
 ```text
 home/       Files linked into $HOME, keeping their final paths
-apps/vscode VS Code configuration with a custom destination
+apps/        Application configurations with custom destinations
 bootstrap.sh
 Brewfile
 ```
@@ -41,6 +41,7 @@ The script can be run repeatedly and determines its paths from the script locati
 - Homebrew: `Brewfile`
 - Tools and apps: Starship, Atuin, btop, GitHub CLI, Ghostty, and Zellij
 - VS Code: `apps/vscode/settings.json` and `apps/vscode/keybindings.json`
+- Espanso: `apps/espanso/config/default.yml` and `apps/espanso/match/base.yml`
 
 ## Adding configuration
 
@@ -48,3 +49,6 @@ Add files destined for `$HOME` under `home/` using the same relative path.
 Put app-specific configurations that need custom destinations under `apps/`
 and add their link to `bootstrap.sh`. Update `.gitignore` for any generated or
 sensitive files.
+
+Espanso owns the keyboard replacements managed here. Bootstrap clears the
+native macOS replacement list to prevent duplicate triggers.

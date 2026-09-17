@@ -145,6 +145,15 @@ configure_git_delta() {
     git config --global interactive.diffFilter 'delta --color-only'
 }
 
+disable_apple_replacements() {
+    if [ "$DRY_RUN" -eq 1 ]; then
+        printf '[dry-run] Would disable macOS keyboard replacements.\n'
+        return 0
+    fi
+
+    defaults delete -g NSUserDictionaryReplacementItems 2>/dev/null || true
+}
+
 
 if [ "$SKIP_BREW" -eq 0 ]; then
     install_brew
@@ -170,6 +179,10 @@ done
 
 link_config "$REPO_DIR/apps/vscode/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
 link_config "$REPO_DIR/apps/vscode/keybindings.json" "$HOME/Library/Application Support/Code/User/keybindings.json"
+link_config "$REPO_DIR/apps/espanso/config/default.yml" "$HOME/Library/Application Support/espanso/config/default.yml"
+link_config "$REPO_DIR/apps/espanso/match/base.yml" "$HOME/Library/Application Support/espanso/match/base.yml"
+
+disable_apple_replacements
 
 configure_git_delta
 
