@@ -41,7 +41,7 @@ The script can be run repeatedly and determines its paths from the script locati
 - Homebrew: `Brewfile`
 - Tools and apps: Starship, Atuin, btop, GitHub CLI, Ghostty, and Zellij
 - VS Code: `apps/vscode/settings.json` and `apps/vscode/keybindings.json`
-- Espanso: `apps/espanso/config/default.yml` and `apps/espanso/match/base.yml`
+- macOS keyboard replacements: `apps/macos/keyboard-replacements.yml`
 
 ## Adding configuration
 
@@ -50,5 +50,7 @@ Put app-specific configurations that need custom destinations under `apps/`
 and add their link to `bootstrap.sh`. Update `.gitignore` for any generated or
 sensitive files.
 
-Espanso owns the keyboard replacements managed here. Bootstrap clears the
-native macOS replacement list to prevent duplicate triggers.
+Bootstrap writes the YAML replacements to macOS’s native
+`~/Library/KeyboardServices/TextReplacements.db` store and restarts the
+keyboard service. Rerun bootstrap after editing the YAML file; reopen open
+applications or System Settings to make them reload the replacements.

@@ -91,8 +91,6 @@ cask "visual-studio-code"
 cask "rectangle"
 # Prevent screen from shutting down
 cask "caffeine"
-# Cross-platform text expander
-cask "espanso"
 
 ###################################
 # Containers

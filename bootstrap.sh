@@ -145,13 +145,70 @@ configure_git_delta() {
     git config --global interactive.diffFilter 'delta --color-only'
 }
 
-disable_apple_replacements() {
+apply_keyboard_replacements() {
+    local source="$REPO_DIR/apps/macos/keyboard-replacements.yml"
+    local database="$HOME/Library/KeyboardServices/TextReplacements.db"
+    local line trigger replacement sql trigger_sql replacement_sql count=0
+
+    [ -f "$source" ] || die "Repository source does not exist: $source"
+
+    # ponytail: target Apple's current private store; revisit if its schema changes.
+    sql='BEGIN IMMEDIATE;'
+    while IFS= read -r line || [ -n "$line" ]; do
+        [ -z "$line" ] || [ "${line#\#}" != "$line" ] && continue
+        if [[ "$line" =~ ^\"([^\"]*)\":\ \"([^\"]*)\"$ ]]; then
+            trigger="${BASH_REMATCH[1]}"
+            replacement="${BASH_REMATCH[2]}"
+            trigger_sql="$(printf '%s' "$trigger" | sed "s/'/''/g")"
+            replacement_sql="$(printf '%s' "$replacement" | sed "s/'/''/g")"
+            sql="$sql
+UPDATE ZTEXTREPLACEMENTENTRY
+SET ZPHRASE='$replacement_sql', ZWASDELETED=0, ZNEEDSSAVETOCLOUD=1,
+    Z_OPT=Z_OPT + 1, ZTIMESTAMP=(strftime('%s','now') - 978307200)
+WHERE ZSHORTCUT='$trigger_sql';
+INSERT INTO ZTEXTREPLACEMENTENTRY
+    (Z_PK, Z_ENT, Z_OPT, ZNEEDSSAVETOCLOUD, ZWASDELETED, ZTIMESTAMP,
+     ZPHRASE, ZSHORTCUT, ZUNIQUENAME, ZREMOTERECORDINFO)
+SELECT
+    (SELECT COALESCE(MAX(Z_PK), 0) + 1 FROM ZTEXTREPLACEMENTENTRY), 1, 1, 1, 0,
+    (strftime('%s','now') - 978307200), '$replacement_sql', '$trigger_sql',
+    lower(hex(randomblob(16))), NULL
+WHERE changes() = 0;"
+            count=$((count + 1))
+        else
+            die "Unsupported replacement syntax in $source: $line"
+        fi
+    done < "$source"
+
+    [ "$count" -gt 0 ] || die "No keyboard replacements found in $source"
+
     if [ "$DRY_RUN" -eq 1 ]; then
-        printf '[dry-run] Would disable macOS keyboard replacements.\n'
+        printf '[dry-run] Would apply macOS keyboard replacements from %s.\n' "$source"
         return 0
     fi
 
-    defaults delete -g NSUserDictionaryReplacementItems 2>/dev/null || true
+    [ -f "$database" ] || die "macOS text replacement database not found: $database"
+    command -v sqlite3 >/dev/null 2>&1 || die "sqlite3 is required to update macOS text replacements."
+    [ "$(sqlite3 "$database" "select 1 from sqlite_master where type='table' and name='ZTEXTREPLACEMENTENTRY';" 2>/dev/null)" = 1 ] ||
+        die "Unsupported macOS text replacement database: $database"
+
+    sql="$sql
+UPDATE Z_PRIMARYKEY
+SET Z_MAX=(SELECT COALESCE(MAX(Z_PK), 0) FROM ZTEXTREPLACEMENTENTRY)
+WHERE Z_ENT=1;
+COMMIT;"
+    sqlite3 "$database" "$sql" || die "Could not update macOS text replacement database: $database"
+    printf 'Applied keyboard replacements to %s\n' "$database"
+}
+
+refresh_keyboard_services() {
+    if [ "$DRY_RUN" -eq 1 ]; then
+        printf '[dry-run] Would restart keyboardservicesd.\n'
+        return 0
+    fi
+
+    killall keyboardservicesd 2>/dev/null || true
+    launchctl kickstart -k "gui/$(id -u)/com.apple.keyboardservicesd" 2>/dev/null || true
 }
 
 
@@ -179,10 +236,8 @@ done
 
 link_config "$REPO_DIR/apps/vscode/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
 link_config "$REPO_DIR/apps/vscode/keybindings.json" "$HOME/Library/Application Support/Code/User/keybindings.json"
-link_config "$REPO_DIR/apps/espanso/config/default.yml" "$HOME/Library/Application Support/espanso/config/default.yml"
-link_config "$REPO_DIR/apps/espanso/match/base.yml" "$HOME/Library/Application Support/espanso/match/base.yml"
-
-disable_apple_replacements
+apply_keyboard_replacements
+refresh_keyboard_services
 
 configure_git_delta
 
