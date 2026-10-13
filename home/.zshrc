@@ -32,17 +32,10 @@ zstyle ':completion:*:descriptions' format '[%d]'
 
 if command -v fzf >/dev/null 2>&1; then
     source <(fzf --zsh)
-    export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
-    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-    export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
 fi
 
 if command -v zoxide >/dev/null 2>&1; then
     eval "$(zoxide init zsh)"
-fi
-
-if command -v direnv >/dev/null 2>&1; then
-    eval "$(direnv hook zsh)"
 fi
 
 if command -v atuin >/dev/null 2>&1; then
@@ -51,4 +44,9 @@ fi
 
 if command -v starship >/dev/null 2>&1; then
     eval "$(starship init zsh)"
+fi
+
+# Load after other prompt hooks so direnv updates the environment first.
+if command -v direnv >/dev/null 2>&1; then
+    eval "$(direnv hook zsh)"
 fi

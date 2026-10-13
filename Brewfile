@@ -35,6 +35,8 @@ brew "tlrc"
 ###################################
 # Distributed revision control system
 brew "git"
+# Terminal UI for Git repositories, used by the `lg` alias
+brew "lazygit"
 # Syntax-highlighting pager for git and diff output
 brew "git-delta"
 # GitHub command-line tool

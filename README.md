@@ -55,6 +55,11 @@ Bootstrap does not remove these formulae automatically.
 Shell, SSH, Ghostty, Starship, Git signing, and VS Code configuration are
 managed. macOS keyboard replacements are in `apps/macos/`.
 
+Shared shell environment and portable aliases live in `home/.shell_common`.
+`home/.bashrc` and `home/.zshrc` source it, then initialize tools using the
+syntax required by that shell. Keep shared values in `.shell_common`; keep
+shell-specific hooks and options in their respective rc files.
+
 ## Adding configuration
 
 Mirror `$HOME` paths under `home/`. Put files with custom destinations under

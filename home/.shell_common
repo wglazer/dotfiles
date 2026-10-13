@@ -1,29 +1,38 @@
 # Shared shell environment for zsh and Bash.
-# Aliases stay here for reuse but load only in interactive shells.
+# Aliases load in every interactive shell, even when environment setup already ran.
 
-if [ "${DOTFILES_COMMON_LOADED:-0}" = 1 ]; then
-    return 0 2>/dev/null || true
+# Remove the old exported guard so child shells can load their aliases.
+unset DOTFILES_COMMON_LOADED
+
+if [ "${_DOTFILES_ENV_INITIALIZED:-0}" != 1 ]; then
+    _DOTFILES_ENV_INITIALIZED=1
+
+    # Homebrew works from macOS and Linux installation locations.
+    if command -v brew >/dev/null 2>&1; then
+        eval "$(brew shellenv)"
+    elif [ -x /opt/homebrew/bin/brew ]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    elif [ -x /usr/local/bin/brew ]; then
+        eval "$(/usr/local/bin/brew shellenv)"
+    elif [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    elif [ -x "$HOME/.linuxbrew/bin/brew" ]; then
+        eval "$("$HOME/.linuxbrew/bin/brew" shellenv)"
+    fi
+
+    case ":$PATH:" in
+        *":$HOME/.local/bin:"*) ;;
+        *) PATH="$HOME/.local/bin:$PATH" ;;
+    esac
+    export PATH
+    export EDITOR="${EDITOR:-nvim}"
+    export VISUAL="${VISUAL:-$EDITOR}"
+    export LANG="${LANG:-en_US.UTF-8}"
+    export LC_ALL="${LC_ALL:-en_US.UTF-8}"
+    export FZF_DEFAULT_COMMAND="${FZF_DEFAULT_COMMAND:-fd --type f --hidden --follow --exclude .git}"
+    export FZF_CTRL_T_COMMAND="${FZF_CTRL_T_COMMAND:-$FZF_DEFAULT_COMMAND}"
+    export FZF_ALT_C_COMMAND="${FZF_ALT_C_COMMAND:-fd --type d --hidden --follow --exclude .git}"
 fi
-export DOTFILES_COMMON_LOADED=1
-
-# Homebrew works from macOS and Linux installation locations.
-if command -v brew >/dev/null 2>&1; then
-    eval "$(brew shellenv)"
-elif [ -x /opt/homebrew/bin/brew ]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-elif [ -x /usr/local/bin/brew ]; then
-    eval "$(/usr/local/bin/brew shellenv)"
-elif [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-elif [ -x "$HOME/.linuxbrew/bin/brew" ]; then
-    eval "$("$HOME/.linuxbrew/bin/brew" shellenv)"
-fi
-
-export PATH="$HOME/.local/bin:$PATH"
-export EDITOR="${EDITOR:-nvim}"
-export VISUAL="${VISUAL:-$EDITOR}"
-export LANG="${LANG:-en_US.UTF-8}"
-export LC_ALL="${LC_ALL:-en_US.UTF-8}"
 
 case "$-" in
     *i*)
