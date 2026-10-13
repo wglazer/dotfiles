@@ -11,8 +11,7 @@ REPO_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 DRY_RUN=0
 SKIP_BREW=0
 SKIP_APT=0
-
-OP_ACCOUNT="${DOTFILES_OP_ACCOUNT:-osedea}"
+GIT_SIGNING_KEY="${DOTFILES_GIT_SIGNING_KEY:-$HOME/.ssh/github_signing.pub}"
 
 usage() {
     cat <<'EOF'
@@ -239,6 +238,26 @@ link_config() {
     printf 'Linked %s -> %s\n' "$target" "$source"
 }
 
+    if [ "$DRY_RUN" -eq 1 ]; then
+        printf '[dry-run] Would configure Git to sign with SSH key %s\n' "$GIT_SIGNING_KEY"
+        return 0
+    fi
+
+    git config --global commit.gpgsign true
+    git config --global gpg.format ssh
+    git config --global user.signingkey "$GIT_SIGNING_KEY"
+    git config --global --unset-all gpg.program || true
+    if [ ! -f "$GIT_SIGNING_KEY" ]; then
+        printf 'SSH signing public key not found at %s; add it before signing commits.\n' "$GIT_SIGNING_KEY" >&2
+    fi
+}
+
+remove_legacy_gpg_wrapper() {
+
+    if [ -L "$target" ] && [ "$(readlink "$target")" = "$source" ]; then
+        backup_target "$target"
+    fi
+}
 
 configure_git_delta() {
     if [ "$DRY_RUN" -eq 1 ]; then
@@ -316,7 +335,6 @@ refresh_keyboard_services() {
     launchctl kickstart -k "gui/$(id -u)/com.apple.keyboardservicesd" 2>/dev/null || true
 }
 
-
 if [ "$PLATFORM" = ubuntu ]; then
     if [ "$SKIP_APT" -eq 0 ] || [ "$SKIP_BREW" -eq 0 ]; then
         check_ubuntu_docker
@@ -363,7 +381,6 @@ if [ "$PLATFORM" = macos ]; then
 fi
 
 configure_git_delta
-
-fi
+remove_legacy_gpg_wrapper
 
 printf '\nDotfiles bootstrap complete.\n'

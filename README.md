@@ -36,7 +36,6 @@ Useful options:
 ./bootstrap.sh --skip-brew
 ./bootstrap.sh --skip-apt
 ./bootstrap.sh --skip-brew --skip-apt
-./bootstrap.sh --restore-signing
 ```
 
 Use `--skip-brew --skip-apt` to link configuration without installing
