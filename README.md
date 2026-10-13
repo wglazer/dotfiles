@@ -1,12 +1,12 @@
 # dotfiles
 
-Personal macOS terminal and development environment configuration.
+Personal macOS and Ubuntu development environment configuration.
 
 ## Structure
 
 ```text
-home/       Files linked into $HOME, keeping their final paths
-apps/        Application configurations with custom destinations
+home/       Files linked into $HOME
+apps/       Application configurations with custom destinations
 bootstrap.sh
 Brewfile
 ```
@@ -19,38 +19,44 @@ Clone the repository, enter it, and run:
 ./bootstrap.sh
 ```
 
-The bootstrap script installs Homebrew packages from `Brewfile`, then creates
-symlinks from `home/` and `apps/vscode/` into their final locations. Existing
-files are moved to a timestamped directory under `~/.dotfiles-backups/` before
-they are replaced.
+Bootstrap installs packages and links configuration files. Replaced files are
+backed up under `~/.dotfiles-backups/`.
+
+macOS uses Homebrew for tools and apps, including Colima and Docker. Ubuntu
+uses apt for Docker and Homebrew prerequisites; Homebrew installs terminal tools.
+
+Ubuntu setup needs sudo. Bootstrap keeps an existing apt Docker provider,
+configures Docker's official repository if needed, and enables the service when
+systemd is running. Conflicting or unmanaged installations stop setup.
 
 Useful options:
 
 ```bash
 ./bootstrap.sh --dry-run
 ./bootstrap.sh --skip-brew
+./bootstrap.sh --skip-apt
+./bootstrap.sh --skip-brew --skip-apt
 ./bootstrap.sh --restore-signing
 ```
 
-The script can be run repeatedly and determines its paths from the script location, so the current working directory does not matter.
+Use `--skip-brew --skip-apt` to link configuration without installing
+packages. `--dry-run` previews actions without changing the system.
+
+On Ubuntu, verify `/usr/bin/docker --version`, `/usr/bin/docker compose version`,
+and `/usr/bin/docker buildx version` before removing Homebrew's Docker formulae:
+
+```bash
+brew uninstall docker docker-compose docker-buildx
+```
+
+Bootstrap does not remove these formulae automatically.
 
 ## Managed configuration
 
-- Shell: `home/.zshrc`, `home/.zprofile`, `home/.bashrc`, `home/.bash_profile`, and `home/.shell_common`
-- SSH: `home/.ssh/config` (`ssh gpu1` and `ssh gpu2`)
-- Homebrew: `Brewfile`
-- Tools and apps: Starship, Atuin, btop, GitHub CLI, Ghostty, and Zellij
-- VS Code: `apps/vscode/settings.json` and `apps/vscode/keybindings.json`
-- macOS keyboard replacements: `apps/macos/keyboard-replacements.yml`
+Shell, SSH, Ghostty, Starship, Git signing, and VS Code configuration are
+managed. macOS keyboard replacements are in `apps/macos/`.
 
 ## Adding configuration
 
-Add files destined for `$HOME` under `home/` using the same relative path.
-Put app-specific configurations that need custom destinations under `apps/`
-and add their link to `bootstrap.sh`. Update `.gitignore` for any generated or
-sensitive files.
-
-Bootstrap writes the YAML replacements to macOS’s native
-`~/Library/KeyboardServices/TextReplacements.db` store and restarts the
-keyboard service. Rerun bootstrap after editing the YAML file; reopen open
-applications or System Settings to make them reload the replacements.
+Mirror `$HOME` paths under `home/`. Put files with custom destinations under
+`apps/` and add their links to `bootstrap.sh`.

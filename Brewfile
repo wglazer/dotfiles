@@ -77,6 +77,7 @@ brew "zellij"
 ###################################
 # macOS applications
 ###################################
+if OS.mac?
 # Desktop app provides the CLI integration; enable it in Settings > Developer
 cask "1password"
 # Command-line interface for 1Password
@@ -91,10 +92,12 @@ cask "visual-studio-code"
 cask "rectangle"
 # Prevent screen from shutting down
 cask "caffeine"
+end
 
 ###################################
 # Containers
 ###################################
+if OS.mac?
 # Container runtimes on macOS and Linux with minimal setup
 brew "colima"
 # Pack, ship and run any application as a lightweight container
@@ -103,3 +106,4 @@ brew "docker"
 brew "docker-compose"
 # Docker CLI plugin for extended build capabilities with BuildKit
 brew "docker-buildx"
+end

@@ -10,6 +10,7 @@ set -Eeuo pipefail
 REPO_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 DRY_RUN=0
 SKIP_BREW=0
+SKIP_APT=0
 
 OP_ACCOUNT="${DOTFILES_OP_ACCOUNT:-osedea}"
 
@@ -17,7 +18,9 @@ usage() {
     cat <<'EOF'
 Usage: ./bootstrap.sh [options]
 
-Install Homebrew packages from Brewfile and symlink the repository configs.
+Install packages and symlink the repository configs on macOS or Ubuntu.
+Ubuntu uses apt for build prerequisites and native Docker, and Homebrew for
+terminal tools. macOS uses Homebrew formulae and application casks.
 
 The script finds this repository automatically, so it can be run from any
 directory. Existing files are backed up before they are replaced.
@@ -25,6 +28,7 @@ directory. Existing files are backed up before they are replaced.
 Options:
   --dry-run    Show the actions without changing the machine.
   --skip-brew  Skip Homebrew installation and Brewfile processing.
+  --skip-apt   Skip Ubuntu prerequisites, Docker installation, and service setup.
   -h, --help   Show this help.
 EOF
 }
@@ -38,13 +42,23 @@ while [ "$#" -gt 0 ]; do
     case "$1" in
         --dry-run) DRY_RUN=1 ;;
         --skip-brew) SKIP_BREW=1 ;;
+        --skip-apt) SKIP_APT=1 ;;
         -h|--help) usage; exit 0 ;;
         *) die "Unknown option: $1" ;;
     esac
     shift
 done
 
-[ "$(uname -s)" = Darwin ] || die "This bootstrap currently supports macOS only."
+case "$(uname -s)" in
+    Darwin) PLATFORM=macos ;;
+    Linux)
+        [ -r /etc/os-release ] || die "Cannot identify this Linux distribution."
+        . /etc/os-release
+        [ "${ID:-}" = ubuntu ] || die "This bootstrap supports macOS and Ubuntu only."
+        PLATFORM=ubuntu
+        ;;
+    *) die "This bootstrap supports macOS and Ubuntu only." ;;
+esac
 [ -d "$HOME" ] || die "HOME is not set to a valid directory."
 
 BACKUP_ROOT="$HOME/.dotfiles-backups/$(date +%Y%m%d-%H%M%S)"
@@ -56,13 +70,104 @@ find_brew() {
         printf '%s\n' "$candidate"
         return 0
     fi
-    for candidate in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+    for candidate in /opt/homebrew/bin/brew /usr/local/bin/brew /home/linuxbrew/.linuxbrew/bin/brew "$HOME/.linuxbrew/bin/brew"; do
         if [ -x "$candidate" ]; then
             printf '%s\n' "$candidate"
             return 0
         fi
     done
     return 1
+}
+
+apt_package_installed() {
+    [ "$(dpkg-query -W -f='${Status}' "$1" 2>/dev/null || true)" = 'install ok installed' ]
+}
+
+check_ubuntu_docker() {
+    local brew_bin installed formula duplicates='' docker_bin
+    if brew_bin="$(find_brew)"; then
+        installed="$("$brew_bin" list --formula)"
+        for formula in docker docker-compose docker-buildx; do
+            if [[ $'\n'"$installed"$'\n' == *$'\n'"$formula"$'\n'* ]]; then
+                duplicates="$duplicates $formula"
+            fi
+        done
+        if [ -n "$duplicates" ]; then
+            if [ "$DRY_RUN" -eq 1 ]; then
+                printf '[dry-run] Docker duplicates must be removed before a real run: brew uninstall%s\n' "$duplicates"
+            else
+                die "Ubuntu Docker must be managed by apt. After verifying apt replacements, run: brew uninstall$duplicates"
+            fi
+        fi
+    fi
+
+    if apt_package_installed docker-ce && apt_package_installed docker.io; then
+        die "Both docker-ce and docker.io are installed. Resolve the Docker package conflict before continuing."
+    fi
+    if ! apt_package_installed docker-ce && ! apt_package_installed docker.io; then
+        docker_bin="$(command -v docker 2>/dev/null || true)"
+        if [ -n "$docker_bin" ]; then
+            die "Docker at $docker_bin is not backed by an apt-managed Engine. Resolve the existing installation before continuing."
+        fi
+        for formula in docker-ce-cli docker-compose docker-compose-v2 docker-doc docker-buildx podman-docker containerd containerd.io runc; do
+            if apt_package_installed "$formula"; then
+                die "Existing package $formula may conflict with Docker Engine installation. Resolve it before continuing."
+            fi
+        done
+    fi
+}
+
+run_apt() {
+    if [ "$(id -u)" -eq 0 ]; then
+        "$@"
+    else
+        command -v sudo >/dev/null 2>&1 || die "sudo is required for Ubuntu system setup."
+        sudo "$@"
+    fi
+}
+
+install_ubuntu_system() {
+    local docker_packages source
+    local prerequisites=(build-essential procps curl file git ca-certificates)
+    if apt_package_installed docker.io; then
+        docker_packages=(docker.io docker-compose-v2 docker-buildx)
+    else
+        docker_packages=(docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin)
+    fi
+
+    if [ "$DRY_RUN" -eq 1 ]; then
+        printf '[dry-run] Would run apt-get update and apt-get install -y %s\n' "${prerequisites[*]}"
+        if ! apt_package_installed docker-ce && ! apt_package_installed docker.io; then
+            printf '[dry-run] Would configure Docker official Ubuntu apt repository and signing key.\n'
+        fi
+        printf '[dry-run] Would ensure apt packages: %s\n' "${docker_packages[*]}"
+        printf '[dry-run] Would enable and start Docker if systemd is running.\n'
+        return 0
+    fi
+
+    run_apt apt-get update
+    run_apt apt-get install -y "${prerequisites[@]}"
+    if ! apt_package_installed docker-ce && ! apt_package_installed docker.io; then
+        [ -n "${VERSION_CODENAME:-}" ] || die "Ubuntu VERSION_CODENAME is missing."
+        run_apt install -m 0755 -d /etc/apt/keyrings
+        run_apt curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+        run_apt chmod a+r /etc/apt/keyrings/docker.asc
+        source="Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $VERSION_CODENAME
+Components: stable
+Architectures: $(dpkg --print-architecture)
+Signed-By: /etc/apt/keyrings/docker.asc"
+        printf '%s\n' "$source" | run_apt tee /etc/apt/sources.list.d/docker.sources >/dev/null
+        run_apt apt-get update
+    fi
+    # Keep the installed provider and avoid upgrading an existing Engine.
+    run_apt apt-get install -y --no-upgrade "${docker_packages[@]}"
+    if [ -d /run/systemd/system ] && command -v systemctl >/dev/null 2>&1 && systemctl show --property=Version --value >/dev/null 2>&1; then
+        run_apt systemctl enable --now docker.service
+    else
+        printf 'Docker packages are installed; systemd is not running. Start Docker manually on the host.\n'
+    fi
 }
 
 install_brew() {
@@ -212,6 +317,17 @@ refresh_keyboard_services() {
 }
 
 
+if [ "$PLATFORM" = ubuntu ]; then
+    if [ "$SKIP_APT" -eq 0 ] || [ "$SKIP_BREW" -eq 0 ]; then
+        check_ubuntu_docker
+    fi
+    if [ "$SKIP_APT" -eq 0 ]; then
+        install_ubuntu_system
+    else
+        printf 'Skipping Ubuntu system setup.\n'
+    fi
+fi
+
 if [ "$SKIP_BREW" -eq 0 ]; then
     install_brew
     install_brew_bundle
@@ -234,10 +350,17 @@ for relative_path in "${HOME_FILES[@]}"; do
     link_config "$REPO_DIR/home/$relative_path" "$HOME/$relative_path"
 done
 
-link_config "$REPO_DIR/apps/vscode/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
-link_config "$REPO_DIR/apps/vscode/keybindings.json" "$HOME/Library/Application Support/Code/User/keybindings.json"
-apply_keyboard_replacements
-refresh_keyboard_services
+if [ "$PLATFORM" = macos ]; then
+    VSCODE_DIR="$HOME/Library/Application Support/Code/User"
+else
+    VSCODE_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/Code/User"
+fi
+link_config "$REPO_DIR/apps/vscode/settings.json" "$VSCODE_DIR/settings.json"
+link_config "$REPO_DIR/apps/vscode/keybindings.json" "$VSCODE_DIR/keybindings.json"
+if [ "$PLATFORM" = macos ]; then
+    apply_keyboard_replacements
+    refresh_keyboard_services
+fi
 
 configure_git_delta
 

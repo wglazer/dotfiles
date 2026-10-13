@@ -3,6 +3,7 @@
 *.swp
 *.swo
 *.bak
+__pycache__/
 
 # Shell history and local overrides
 home/.zsh_history
