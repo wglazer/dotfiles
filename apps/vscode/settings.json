@@ -1,12 +1,26 @@
 {
-    "chat.disableAIFeatures": true,
-    "editor.formatOnSave": true,
-    "files.autoSaveDelay": "1000",
-    "containers.containerClient": "com.microsoft.visualstudio.containers.docker",
-    "containers.orchestratorClient": "com.microsoft.visualstudio.orchestrators.dockercompose",
-    "jupyter.widgetScriptSources": [
-        "jsdelivr.com",
-        "unpkg.com"
-    ],
-    "jupyter.interactiveWindow.creationMode": "perFile",
+  "chat.disableAIFeatures": true,
+  "editor.formatOnSave": true,
+  "files.autoSaveDelay": "1000",
+  "containers.containerClient": "com.microsoft.visualstudio.containers.docker",
+  "containers.orchestratorClient": "com.microsoft.visualstudio.orchestrators.dockercompose",
+  "jupyter.widgetScriptSources": [
+    "jsdelivr.com",
+    "unpkg.com"
+  ],
+  "jupyter.interactiveWindow.creationMode": "perFile",
+  "workbench.activityBar.location": "top",
+  "editor.minimap.enabled": false,
+  "editor.stickyScroll.enabled": true,
+  "breadcrumbs.enabled": false,
+  "window.commandCenter": true,
+  "terminal.integrated.defaultLocation": "view",
+  "scm.defaultViewMode": "tree",
+  "diffEditor.renderSideBySide": false,
+  "diffEditor.hideUnchangedRegions.enabled": true,
+  "git.autoStash": true,
+  "basedpyright.analysis.diagnosticMode": "workspace",
+  "basedpyright.analysis.typeCheckingMode": "standard",
+  "workbench.sideBar.location": "left",
+  "workbench.panel.defaultLocation": "right"
 }
