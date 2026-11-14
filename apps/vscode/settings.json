@@ -1,42 +1,75 @@
 {
+  // Chat
   "chat.disableAIFeatures": true,
+
+  // Files
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+
+  // Editor behavior and appearance
   "editor.formatOnSave": true,
-  "files.autoSaveDelay": "1000",
+  "editor.fontFamily": "JetBrainsMono Nerd Font",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 15,
+  "editor.lineHeight": 1.65,
+  "editor.padding.top": 12,
+  "editor.padding.bottom": 12,
+  "editor.minimap.enabled": false,
+  "editor.renderWhitespace": "selection",
+  "editor.smoothScrolling": true,
+  "editor.cursorBlinking": "phase",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.stickyScroll.enabled": true,
+  "editor.guides.bracketPairs": "active",
+  "editor.renderLineHighlight": "gutter",
+  "breadcrumbs.enabled": false,
+
+  // Terminal
+  "terminal.integrated.defaultLocation": "view",
+  "terminal.integrated.tabs.enabled": false,
+  "terminal.integrated.fontFamily": "JetBrainsMono Nerd Font",
+  "terminal.integrated.fontSize": 14,
+  "terminal.integrated.lineHeight": 1.3,
+
+  // Window and workbench layout
+  "window.commandCenter": true,
+  "window.menuBarVisibility": "hidden",
+  "window.title": "${dirty}${activeEditorShort}",
+  "window.zoomLevel": 0.5,
+  "workbench.sideBar.location": "left",
+  "workbench.activityBar.location": "top",
+  "workbench.activityBar.compact": true,
+  "workbench.panel.defaultLocation": "right",
+  "workbench.panel.opensMaximized": "never",
+  "workbench.secondarySideBar.defaultVisibility": "hidden",
+  "workbench.layoutControl.enabled": false,
+
+  // Editor tabs and workbench appearance
+  "workbench.editor.showIcons": false,
+  "workbench.editor.tabCloseButton": "off",
+  "workbench.editor.limit.enabled": true,
+  "workbench.editor.limit.value": 5,
+  "workbench.statusBar.visible": false,
+  "workbench.tree.indent": 16,
+
+  // Explorer and source control
+  "explorer.openEditors.visible": 0,
+  "explorer.compactFolders": false,
+  "scm.defaultViewMode": "tree",
+
+  // Diff and Git
+  "diffEditor.renderSideBySide": true,
+  "diffEditor.hideUnchangedRegions.enabled": true,
+  "git.autoStash": true,
+
+  // Language tools and extensions
+  "basedpyright.analysis.diagnosticMode": "workspace",
+  "basedpyright.analysis.typeCheckingMode": "standard",
   "containers.containerClient": "com.microsoft.visualstudio.containers.docker",
   "containers.orchestratorClient": "com.microsoft.visualstudio.orchestrators.dockercompose",
   "jupyter.widgetScriptSources": [
     "jsdelivr.com",
     "unpkg.com"
   ],
-  "jupyter.interactiveWindow.creationMode": "perFile",
-  "workbench.activityBar.location": "top",
-  "editor.minimap.enabled": false,
-  "editor.fontFamily": "JetBrainsMono Nerd Font",
-  "editor.fontSize": 14,
-  "editor.fontLigatures": true,
-  "editor.lineHeight": 26,
-  "editor.renderWhitespace": "selection",
-  "editor.smoothScrolling": true,
-  "editor.cursorBlinking": "phase",
-  "editor.cursorSmoothCaretAnimation": "on",
-  "editor.stickyScroll.enabled": true,
-  "breadcrumbs.enabled": false,
-  "window.commandCenter": true,
-  "window.menuBarVisibility": "hidden",
-  "window.title": "${dirty}${activeEditorShort}",
-  "workbench.layoutControl.enabled": false,
-  "workbench.iconTheme": "material-icon-theme",
-  "workbench.editor.showIcons": false,
-  "workbench.editor.tabCloseButton": "off",
-  "workbench.statusBar.visible": false,
-  "explorer.openEditors.visible": 0,
-  "terminal.integrated.defaultLocation": "view",
-  "scm.defaultViewMode": "tree",
-  "diffEditor.renderSideBySide": false,
-  "diffEditor.hideUnchangedRegions.enabled": true,
-  "git.autoStash": true,
-  "basedpyright.analysis.diagnosticMode": "workspace",
-  "basedpyright.analysis.typeCheckingMode": "standard",
-  "workbench.sideBar.location": "left",
-  "workbench.panel.defaultLocation": "right"
+  "jupyter.interactiveWindow.creationMode": "perFile"
 }

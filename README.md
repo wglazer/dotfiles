@@ -15,13 +15,9 @@ macOS uses Homebrew. Ubuntu uses apt for system packages and Docker, plus
 Homebrew for CLI tools. WSL uses Docker Desktop integration; enable the distro
 under Docker Desktop **Settings > Resources > WSL Integration**.
 
-VS Code settings are symlinked on macOS and Ubuntu. In WSL, bootstrap pushes
-repo settings to Windows VS Code. Pull Windows edits before committing:
-
-```bash
-./platform/wsl/vscode-sync.sh pull
-./platform/wsl/vscode-sync.sh push
-```
+VS Code settings are symlinked on macOS and Ubuntu. In WSL, bootstrap replaces
+the Windows VS Code settings with the repository configuration. Existing files
+are backed up under `~/.dotfiles-backups/`.
 
 ## Managed configuration
 

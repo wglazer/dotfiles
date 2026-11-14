@@ -21,17 +21,23 @@ setopt EXTENDED_HISTORY
 # Completion
 fpath+=(~/.zfunc)
 autoload -Uz compinit
-compinit
-zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list \
   'm:{a-zA-Z}={A-Za-z}' \
   'r:|[._-]=* r:|=*'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*:descriptions' format '[%d]'
+compinit
 
 if command -v fzf >/dev/null 2>&1; then
     source <(fzf --zsh)
+fi
+
+# Load fzf-tab last so it owns Tab after fzf's completion integration.
+fzf_tab="$HOME/.local/share/zsh/fzf-tab/fzf-tab.plugin.zsh"
+if command -v fzf >/dev/null 2>&1 && [ -f "$fzf_tab" ]; then
+    source "$fzf_tab"
+    zstyle ':completion:*' menu no
 fi
 
 if command -v zoxide >/dev/null 2>&1; then

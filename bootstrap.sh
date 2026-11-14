@@ -116,16 +116,55 @@ install_brew_bundle() {
     fi
 }
 
-ensure_codex_plugin() {
-    local source="$1" marketplace="$2" plugin="$3" marketplaces installed
-    marketplaces="$(codex plugin marketplace list --json)"
-    if ! printf '%s\n' "$marketplaces" | grep -Fq "\"name\": \"$marketplace\""; then
-        codex plugin marketplace add "$source"
+install_fzf_tab() {
+    local target="$HOME/.local/share/zsh/fzf-tab"
+
+    if ! command -v fzf >/dev/null 2>&1; then
+        printf 'fzf not found; skipping fzf-tab. Install fzf and rerun bootstrap.\n'
+        return 0
     fi
-    installed="$(codex plugin list --json)"
-    if ! printf '%s\n' "$installed" | grep -Fq "\"name\": \"$plugin\"" \
-        || ! printf '%s\n' "$installed" | grep -Fq "\"marketplaceName\": \"$marketplace\""; then
-        codex plugin add "$plugin@$marketplace"
+
+    if [ -f "$target/fzf-tab.plugin.zsh" ]; then
+        printf 'fzf-tab found at %s\n' "$target"
+        return 0
+    fi
+
+    if [ -e "$target" ]; then
+        die "fzf-tab install path exists but is not a plugin checkout: $target"
+    fi
+
+    if [ "$DRY_RUN" -eq 1 ]; then
+        printf '[dry-run] Would clone fzf-tab into %s\n' "$target"
+        return 0
+    fi
+
+    mkdir -p "$(dirname "$target")"
+    git clone --depth 1 https://github.com/Aloxaf/fzf-tab.git "$target"
+}
+
+json_has_field_value() {
+    local json="$1" field="$2" value="$3" pattern
+    pattern="\"$field\"[[:space:]]*:[[:space:]]*\"$value\"([[:space:]]*[,}])"
+    [[ "$json" =~ $pattern ]]
+}
+
+ensure_codex_plugin() {
+    local source="$1" marketplace="$2" plugin="$3" marketplaces installed add_output
+    marketplaces="$(codex plugin marketplace list --json)" || return $?
+    if ! json_has_field_value "$marketplaces" name "$marketplace"; then
+        if ! add_output="$(codex plugin marketplace add "$source" 2>&1)"; then
+            if [[ "$add_output" == *"already added from a different source"* ]]; then
+                return 2
+            fi
+            printf '%s\n' "$add_output" >&2
+            return 1
+        fi
+        [ -z "$add_output" ] || printf '%s\n' "$add_output"
+    fi
+    installed="$(codex plugin list --json)" || return $?
+    if ! json_has_field_value "$installed" name "$plugin" \
+        || ! json_has_field_value "$installed" marketplaceName "$marketplace"; then
+        codex plugin add "$plugin@$marketplace" || return $?
     fi
 }
 
@@ -138,8 +177,18 @@ install_codex_skills() {
         printf 'Codex CLI not found; install Codex and rerun bootstrap to install Ponytail and Matt Pocock skills.\n'
         return 0
     fi
-    ensure_codex_plugin DietrichGebert/ponytail ponytail ponytail
     ensure_codex_plugin mattpocock/skills mattpocock mattpocock-skills
+    local status
+    if ensure_codex_plugin DietrichGebert/ponytail ponytail ponytail; then
+        return 0
+    else
+        status=$?
+        if [ "$status" -eq 2 ]; then
+            printf 'Skipping Ponytail: Codex already has a marketplace named ponytail from another source. Remove that marketplace manually to install the bootstrap-managed source.\n' >&2
+            return 0
+        fi
+        return "$status"
+    fi
 }
 
 install_vscode_extensions() {
@@ -204,23 +253,22 @@ link_config() {
 }
 
 configure_vscode() {
-    local vscode_dir keybinding_source
+    local vscode_dir
     case "$PLATFORM" in
         osx) vscode_dir="$HOME/Library/Application Support/Code/User" ;;
         ubuntu) vscode_dir="${XDG_CONFIG_HOME:-$HOME/.config}/Code/User" ;;
         wsl)
-            local -a arguments=(push)
+            local -a arguments=()
             if [ "$DRY_RUN" -eq 1 ]; then
                 arguments+=(--dry-run)
             fi
-            "$REPO_DIR/platform/wsl/vscode-sync.sh" "${arguments[@]}"
+            "$REPO_DIR/platform/wsl/vscode-setup.sh" "${arguments[@]}"
             install_vscode_extensions
             return
             ;;
     esac
-    keybinding_source="$REPO_DIR/apps/vscode/keybindings/$PLATFORM.json"
     link_config "$REPO_DIR/apps/vscode/settings.json" "$vscode_dir/settings.json"
-    link_config "$keybinding_source" "$vscode_dir/keybindings.json"
+    link_config "$REPO_DIR/apps/vscode/keybindings.json" "$vscode_dir/keybindings.json"
 }
 
 configure_git_delta() {
@@ -282,7 +330,7 @@ HOME_FILES=(
     .config/ghostty/config.ghostty .config/starship.toml
     .codex/config.toml .codex/AGENTS.md .codex/hooks.json
     .codex/hooks/turn-diff.js .codex/skills/software-design-philosophy
-    .codex/shell.sh .local/bin/turn-diff .local/bin/dotfiles-alias
+    .local/bin/turn-diff .local/bin/dotfiles-alias
 )
 for relative_path in "${HOME_FILES[@]}"; do
     link_config "$REPO_DIR/home/$relative_path" "$HOME/$relative_path"
@@ -294,6 +342,7 @@ for alias in "${LOCAL_BIN_ALIASES[@]}"; do
 done
 
 install_codex_skills
+install_fzf_tab
 configure_vscode
 
 if [ "$PLATFORM" = osx ]; then

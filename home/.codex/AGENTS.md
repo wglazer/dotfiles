@@ -1,34 +1,21 @@
-# Worktree workflow
-
-- Use a managed Git worktree by default for coding tasks in every Codex surface
-  that supports worktree creation. Do not wait for the user to repeat this
-  preference. The interactive `codex` shell command and `cw` shortcut do this
-  automatically.
-- Resume an existing session with `codex resume`; it continues in that
-  session's existing checkout.
-- Fork a session into a separate worktree with `codex fork --worktree <session-id>`.
-- Use `codex-here` only when a task should work in the current checkout.
-- In the Codex app or IDE, select the worktree execution environment when
-  starting a task. If already in a managed worktree, continue there.
-- Before editing, confirm the active checkout and branch. If the current surface
-  cannot create a worktree, explain that limitation and give the user the exact
-  action needed to start one; do not silently edit the base checkout.
-- At the end of each turn, show the turn's diff summary. `td` displays the most
-  recent saved turn diff for the current Git worktree; use `td --last` to skip
-  empty turns and `td --all` to inspect the most recent diff across worktrees.
-- When the host provides a **Pull changes** action, use it after completing the
-  requested work so the worktree changes reach the base checkout. If the host
-  does not provide that action, report the worktree branch and the exact
-  integration step. Do not create a commit unless the user asks for one.
-
 ## README style
 
 - Use numbered lists in README files instead of bulleted lists.
 
-## Command preference
+## Commands and commits
 
 - Prefer simple `just` commands over `uv` or other tooling.
+- Use Conventional Commits with one concise, descriptive line and no body.
 
-## Commit style
+## General design and writing
 
-- Always use Conventional Commits with one concise, descriptive line and no body.
+- Keep documentation short. Explain purpose, usage, and important constraints; keep runnable examples covered by unit tests.
+- Apply the software design philosophy often: reduce complexity, hide decisions behind clear interfaces, and make code obvious to read and change.
+- Prefer precise names and prose-like code. Invest in design quality as part of each change.
+
+## Python
+
+- Prefer `uv`, `ruff`, and `basedpyright` for new Python work; follow the project's existing tool configuration when it differs.
+- In `/hack`, treat Python files as notebook-style scripts when appropriate: use the project's `jpytxt` workflow and finish with a `# %%` cell for VS Code's Run All.
+- Define the domain model and suitable dataclasses before building functions. Prefer strong types and functional composition when they clarify data flow; use composed objects when they provide useful boundaries. Use classmethods for stateless construction when helpful.
+- Write tests that read like prose. Prefer focused tests, `pytest.mark.parametrize` for repeated cases, and reusable fixtures, including dataclass-backed fixtures when they clarify setup. Treat complex tests as a design smell; code that cannot be unit-tested or mocked may need a better seam.

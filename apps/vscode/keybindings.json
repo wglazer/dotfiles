@@ -1,7 +1,157 @@
-// Place your key bindings in this file to override the defaults
 [
     {
+        "key": "cmd+e",
+        "command": "workbench.action.toggleSidebarVisibility",
+        "when": "isMac && activeViewlet == 'workbench.view.explorer'"
+    },
+    {
+        "key": "cmd+e",
+        "command": "workbench.view.explorer",
+        "when": "isMac && activeViewlet != 'workbench.view.explorer'"
+    },
+    {
+        "key": "ctrl+e",
+        "command": "workbench.action.toggleSidebarVisibility",
+        "when": "(isLinux || isWindows) && activeViewlet == 'workbench.view.explorer'"
+    },
+    {
+        "key": "ctrl+e",
+        "command": "workbench.view.explorer",
+        "when": "(isLinux || isWindows) && activeViewlet != 'workbench.view.explorer'"
+    },
+    {
+        "key": "cmd+g",
+        "command": "workbench.action.toggleSidebarVisibility",
+        "when": "isMac && activeViewlet == 'workbench.view.scm'"
+    },
+    {
+        "key": "cmd+g",
+        "command": "workbench.view.scm",
+        "when": "isMac && activeViewlet != 'workbench.view.scm'"
+    },
+    {
+        "key": "ctrl+g",
+        "command": "workbench.action.toggleSidebarVisibility",
+        "when": "(isLinux || isWindows) && activeViewlet == 'workbench.view.scm'"
+    },
+    {
+        "key": "ctrl+g",
+        "command": "workbench.view.scm",
+        "when": "(isLinux || isWindows) && activeViewlet != 'workbench.view.scm'"
+    },
+    {
+        "key": "cmd+j",
+        "command": "workbench.action.togglePanel",
+        "when": "isMac"
+    },
+    {
+        "key": "ctrl+j",
+        "command": "workbench.action.togglePanel",
+        "when": "isLinux || isWindows"
+    },
+    {
+        "key": "cmd+0",
+        "command": "workbench.action.focusSideBar",
+        "when": "isMac"
+    },
+    {
+        "key": "ctrl+0",
+        "command": "workbench.action.focusSideBar",
+        "when": "isLinux || isWindows"
+    },
+    {
+        "key": "cmd+1",
+        "command": "workbench.files.action.focusFilesExplorer",
+        "when": "isMac"
+    },
+    {
+        "key": "cmd+2",
+        "command": "workbench.action.focusActiveEditorGroup",
+        "when": "isMac"
+    },
+    {
+        "key": "cmd+3",
+        "command": "workbench.action.terminal.focus",
+        "when": "isMac"
+    },
+    {
+        "key": "ctrl+1",
+        "command": "workbench.files.action.focusFilesExplorer",
+        "when": "isLinux || isWindows"
+    },
+    {
+        "key": "ctrl+2",
+        "command": "workbench.action.focusActiveEditorGroup",
+        "when": "isLinux || isWindows"
+    },
+    {
+        "key": "ctrl+3",
+        "command": "workbench.action.terminal.focus",
+        "when": "isLinux || isWindows"
+    },
+    {
+        "key": "cmd+\\",
+        "command": "workbench.action.terminal.split",
+        "when": "isMac && terminalFocus"
+    },
+    {
+        "key": "ctrl+shift+5",
+        "command": "workbench.action.terminal.split",
+        "when": "(isLinux || isWindows) && terminalFocus"
+    },
+    {
+        "key": "ctrl+shift+`",
+        "command": "workbench.action.terminal.new",
+        "when": "terminalFocus"
+    },
+    {
+        "key": "shift+cmd+]",
+        "command": "workbench.action.terminal.focusNext",
+        "when": "isMac && terminalFocus"
+    },
+    {
+        "key": "shift+cmd+[",
+        "command": "workbench.action.terminal.focusPrevious",
+        "when": "isMac && terminalFocus"
+    },
+    {
+        "key": "ctrl+pagedown",
+        "command": "workbench.action.terminal.focusNext",
+        "when": "(isLinux || isWindows) && terminalFocus"
+    },
+    {
+        "key": "ctrl+pageup",
+        "command": "workbench.action.terminal.focusPrevious",
+        "when": "(isLinux || isWindows) && terminalFocus"
+    },
+    {
+        "key": "shift+cmd+]",
+        "command": "workbench.action.nextPanelView",
+        "when": "isMac && panelFocus && !terminalFocus"
+    },
+    {
+        "key": "shift+cmd+[",
+        "command": "workbench.action.previousPanelView",
+        "when": "isMac && panelFocus && !terminalFocus"
+    },
+    {
+        "key": "ctrl+pagedown",
+        "command": "workbench.action.nextPanelView",
+        "when": "(isLinux || isWindows) && panelFocus && !terminalFocus"
+    },
+    {
+        "key": "ctrl+pageup",
+        "command": "workbench.action.previousPanelView",
+        "when": "(isLinux || isWindows) && panelFocus && !terminalFocus"
+    },
+    {
         "key": "shift+cmd+i",
-        "command": "chatgpt.openSidebar"
+        "command": "chatgpt.openSidebar",
+        "when": "isMac"
+    },
+    {
+        "key": "shift+ctrl+i",
+        "command": "chatgpt.openSidebar",
+        "when": "isLinux || isWindows"
     }
 ]
