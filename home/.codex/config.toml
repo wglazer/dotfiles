@@ -1,0 +1,15 @@
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+model = "gpt-6-luna"
+model_reasoning_effort = "high"
+
+[features]
+worktrees = true
+
+[skills]
+include_instructions = true
+max_context_tokens = 10000
+
+[tui]
+vim_mode_default = true
+status_line = ["model-with-reasoning", "current-dir", "context-used", "five-hour-limit"]

@@ -1,0 +1,21 @@
+#!/bin/sh
+
+name=${0##*/}
+
+case "$name" in
+    ls|l) exec eza "$@" ;;
+    ll) exec eza -lah --git "$@" ;;
+    la) exec eza -a "$@" ;;
+    lt) exec eza --tree --level=2 "$@" ;;
+    td) exec turn-diff "$@" ;;
+    cat) exec bat "$@" ;;
+    grep) exec rg "$@" ;;
+    g) exec git "$@" ;;
+    gs) exec git status "$@" ;;
+    gd) exec git diff "$@" ;;
+    gl) exec git log --oneline --graph --decorate "$@" ;;
+    lg) exec lazygit "$@" ;;
+    v|vim) exec nvim "$@" ;;
+    zj) exec zellij "$@" ;;
+    *) printf 'Unknown dotfiles command: %s\n' "$name" >&2; exit 127 ;;
+esac

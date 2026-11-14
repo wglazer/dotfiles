@@ -59,6 +59,11 @@ case "$-" in
         alias ...='cd ../..'
         alias ....='cd ../../..'
 
+        alias td='turn-diff'
+        if [ -f "$HOME/.codex/shell.sh" ]; then
+            . "$HOME/.codex/shell.sh"
+        fi
+
         case "${OSTYPE:-}" in
             darwin*)
                 alias copy='pbcopy'

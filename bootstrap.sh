@@ -197,6 +197,39 @@ install_brew_bundle() {
     "$brew_bin" bundle install --file="$REPO_DIR/Brewfile"
 }
 
+ensure_codex_plugin() {
+    local source="$1"
+    local marketplace="$2"
+    local plugin="$3"
+    local marketplaces installed
+
+    marketplaces="$(codex plugin marketplace list --json)"
+    if ! printf '%s\n' "$marketplaces" | grep -Fq "\"name\": \"$marketplace\""; then
+        codex plugin marketplace add "$source"
+    fi
+
+    installed="$(codex plugin list --json)"
+    if ! printf '%s\n' "$installed" | grep -Fq "\"name\": \"$plugin\"" \
+        || ! printf '%s\n' "$installed" | grep -Fq "\"marketplaceName\": \"$marketplace\""; then
+        codex plugin add "$plugin@$marketplace"
+    fi
+}
+
+install_codex_skills() {
+    if [ "$DRY_RUN" -eq 1 ]; then
+        printf '[dry-run] Would install Ponytail and Matt Pocock Codex plugins if the Codex CLI is available.\n'
+        return 0
+    fi
+
+    if ! command -v codex >/dev/null 2>&1; then
+        printf 'Codex CLI not found; install Codex and rerun bootstrap to install Ponytail and Matt Pocock skills.\n'
+        return 0
+    fi
+
+    ensure_codex_plugin DietrichGebert/ponytail ponytail ponytail
+    ensure_codex_plugin mattpocock/skills mattpocock mattpocock-skills
+}
+
 backup_target() {
     local target="$1"
     local relative destination
@@ -362,11 +395,26 @@ HOME_FILES=(
     .ssh/config
     .config/ghostty/config.ghostty
     .config/starship.toml
+    .codex/config.toml
+    .codex/AGENTS.md
+    .codex/hooks.json
+    .codex/hooks/turn-diff.js
+    .codex/skills/software-design-philosophy
+    .codex/shell.sh
+    .local/bin/turn-diff
+    .local/bin/dotfiles-alias
 )
 
 for relative_path in "${HOME_FILES[@]}"; do
     link_config "$REPO_DIR/home/$relative_path" "$HOME/$relative_path"
 done
+
+LOCAL_BIN_ALIASES=(ls l ll la lt td cat grep g gs gd gl lg v vim zj)
+for alias in "${LOCAL_BIN_ALIASES[@]}"; do
+    link_config "$REPO_DIR/home/.local/bin/dotfiles-alias" "$HOME/.local/bin/$alias"
+done
+
+install_codex_skills
 
 if [ "$PLATFORM" = macos ]; then
     VSCODE_DIR="$HOME/Library/Application Support/Code/User"

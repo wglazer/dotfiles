@@ -78,8 +78,16 @@ ssh -o PreferredAuthentications=publickey -o PasswordAuthentication=no old true 
 
 ## Managed configuration
 
-Shell, SSH, Ghostty, Starship, Git signing, and VS Code configuration are
-managed. macOS keyboard replacements are in `apps/macos/`.
+1. Managed: shell, SSH, Ghostty, Starship, Git signing, VS Code, and Codex CLI.
+2. Codex includes managed defaults, worktree helpers, and turn diffs.
+3. macOS keyboard replacements are in `apps/macos/`.
+
+## Opinions
+
+1. My default IDE is VS Code with the Codex terminal in the right panel, the
+  editor in the center, and Git/files on the left. Set the terminal, editor,
+  and sidebar widths manually (45% / 45% / 10%).
+2. I strongly prefer simple `just` commands over `uv` or other tooling.
 
 Shared shell environment and portable aliases live in `home/.shell_common`.
 `home/.bashrc` and `home/.zshrc` source it, then initialize tools using the

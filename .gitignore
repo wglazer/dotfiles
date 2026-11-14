@@ -18,3 +18,21 @@ home/Library/Application Support/Code/User/workspaceStorage/
 
 # Local bootstrap backups
 .dotfiles-backups/
+
+# Runtime-created command aliases point to the shared dispatcher
+home/.local/bin/ls
+home/.local/bin/l
+home/.local/bin/ll
+home/.local/bin/la
+home/.local/bin/lt
+home/.local/bin/td
+home/.local/bin/cat
+home/.local/bin/grep
+home/.local/bin/g
+home/.local/bin/gs
+home/.local/bin/gd
+home/.local/bin/gl
+home/.local/bin/lg
+home/.local/bin/v
+home/.local/bin/vim
+home/.local/bin/zj
