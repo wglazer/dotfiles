@@ -230,6 +230,34 @@ install_codex_skills() {
     ensure_codex_plugin mattpocock/skills mattpocock mattpocock-skills
 }
 
+install_vscode_extensions() {
+    local extension installed
+    local extensions=(
+        PKief.material-icon-theme
+        OpenAI.chatgpt
+        ms-toolsai.jupyter
+        detachhead.basedpyright
+        ms-python.python
+    )
+
+    if [ "$DRY_RUN" -eq 1 ]; then
+        printf '[dry-run] Would install VS Code extensions if the code CLI is available: %s\n' "${extensions[*]}"
+        return 0
+    fi
+
+    if ! command -v code >/dev/null 2>&1; then
+        printf 'VS Code CLI not found; install VS Code and rerun bootstrap to install its configured extensions.\n'
+        return 0
+    fi
+
+    installed="$(code --list-extensions)"
+    for extension in "${extensions[@]}"; do
+        if ! printf '%s\n' "$installed" | grep -Fxiq "$extension"; then
+            code --install-extension "$extension"
+        fi
+    done
+}
+
 backup_target() {
     local target="$1"
     local relative destination
@@ -423,6 +451,7 @@ else
 fi
 link_config "$REPO_DIR/apps/vscode/settings.json" "$VSCODE_DIR/settings.json"
 link_config "$REPO_DIR/apps/vscode/keybindings.json" "$VSCODE_DIR/keybindings.json"
+install_vscode_extensions
 if [ "$PLATFORM" = macos ]; then
     apply_keyboard_replacements
     refresh_keyboard_services
