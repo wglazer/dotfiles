@@ -1,0 +1,6 @@
+[
+    {
+        "key": "shift+ctrl+i",
+        "command": "chatgpt.openSidebar"
+    }
+]

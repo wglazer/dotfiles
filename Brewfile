@@ -7,6 +7,10 @@ brew "atuin"
 brew "direnv"
 # Command-line fuzzy finder written in Go
 brew "fzf"
+# Z shell, used by the managed shell configuration
+brew "zsh"
+# JavaScript runtime and npm
+brew "node"
 # Cross-shell prompt for astronauts
 brew "starship"
 # Shell extension to navigate your filesystem faster
@@ -75,37 +79,3 @@ brew "watch"
 brew "neovim"
 # Pluggable terminal workspace, with terminal multiplexer as the base feature
 brew "zellij"
-
-###################################
-# macOS applications
-###################################
-if OS.mac?
-# Desktop app provides the CLI integration; enable it in Settings > Developer
-cask "1password"
-# Command-line interface for 1Password
-cask "1password-cli"
-# JetBrains Mono patched with Nerd Fonts glyphs
-cask "font-jetbrains-mono-nerd-font"
-# Terminal emulator that uses platform-native UI and GPU acceleration
-cask "ghostty"
-# Code editor from Microsoft
-cask "visual-studio-code"
-# Move and resize windows on macOS with keyboard shortcuts and snap areas
-cask "rectangle"
-# Prevent screen from shutting down
-cask "caffeine"
-end
-
-###################################
-# Containers
-###################################
-if OS.mac?
-# Container runtimes on macOS and Linux with minimal setup
-brew "colima"
-# Pack, ship and run any application as a lightweight container
-brew "docker"
-# Define and run multi-container applications with Docker
-brew "docker-compose"
-# Docker CLI plugin for extended build capabilities with BuildKit
-brew "docker-buildx"
-end
