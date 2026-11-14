@@ -317,7 +317,7 @@ function handleHook(input) {
   const lines = summary.files.map(file =>
     `${colors.cyan}${file.path}${colors.reset} ${colors.green}+${file.added}${colors.reset} ${colors.red}-${file.removed}${colors.reset}`,
   );
-  const message = lines.length ? lines.join('\n') : 'No repo file changes.';
+  const message = `turn-diff\n\n${lines.length ? lines.join('\n') : 'No repo file changes.'}`;
   process.stdout.write(JSON.stringify({ systemMessage: message }) + '\n');
 }
 
