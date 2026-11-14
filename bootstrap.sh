@@ -11,7 +11,6 @@ REPO_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 DRY_RUN=0
 SKIP_BREW=0
 SKIP_APT=0
-GIT_SIGNING_KEY="${DOTFILES_GIT_SIGNING_KEY:-$HOME/.ssh/github_signing.pub}"
 
 usage() {
     cat <<'EOF'
@@ -261,7 +260,11 @@ install_vscode_extensions() {
 backup_target() {
     local target="$1"
     local relative destination
-    relative="${target#"$HOME"/}"
+    if [[ "$target" == "$HOME/"* ]]; then
+        relative="${target#"$HOME"/}"
+    else
+        relative="external/${target#/}"
+    fi
     destination="$BACKUP_ROOT/$relative"
 
     if [ "$DRY_RUN" -eq 1 ]; then
@@ -299,21 +302,34 @@ link_config() {
     printf 'Linked %s -> %s\n' "$target" "$source"
 }
 
-    if [ "$DRY_RUN" -eq 1 ]; then
-        printf '[dry-run] Would configure Git to sign with SSH key %s\n' "$GIT_SIGNING_KEY"
+copy_config() {
+    local source="$1"
+    local target="$2"
+
+    [ -e "$source" ] || die "Repository source does not exist: $source"
+
+    if [ -f "$target" ] && cmp -s "$source" "$target"; then
+        printf 'Already synced: %s\n' "$target"
         return 0
     fi
 
-    git config --global commit.gpgsign true
-    git config --global gpg.format ssh
-    git config --global user.signingkey "$GIT_SIGNING_KEY"
-    git config --global --unset-all gpg.program || true
-    if [ ! -f "$GIT_SIGNING_KEY" ]; then
-        printf 'SSH signing public key not found at %s; add it before signing commits.\n' "$GIT_SIGNING_KEY" >&2
+    if [ -e "$target" ] || [ -L "$target" ]; then
+        backup_target "$target"
     fi
+
+    if [ "$DRY_RUN" -eq 1 ]; then
+        printf '[dry-run] Would copy %s to %s\n' "$source" "$target"
+        return 0
+    fi
+
+    mkdir -p "$(dirname "$target")"
+    cp "$source" "$target"
+    printf 'Copied %s -> %s\n' "$source" "$target"
 }
 
 remove_legacy_gpg_wrapper() {
+    local target="$HOME/.local/bin/gpg1pass"
+    local source="$REPO_DIR/home/.local/bin/gpg1pass"
 
     if [ -L "$target" ] && [ "$(readlink "$target")" = "$source" ]; then
         backup_target "$target"
@@ -328,6 +344,28 @@ configure_git_delta() {
 
     git config --global core.pager delta
     git config --global interactive.diffFilter 'delta --color-only'
+}
+
+configure_git_identity() {
+    local git_email
+
+    if [ "$DRY_RUN" -eq 1 ]; then
+        printf '[dry-run] Would set the global Git name to wglazer and prompt for an email if one is not configured.\n'
+        return 0
+    fi
+
+    git config --global user.name wglazer
+    if git config --global --get user.email >/dev/null 2>&1; then
+        return 0
+    fi
+    [ -t 0 ] || die "Git user.email is not configured; rerun bootstrap in an interactive terminal to enter it."
+
+    while true; do
+        read -r -p 'Git email for this machine: ' git_email || die "Could not read the Git email."
+        [ -n "$git_email" ] && break
+        printf 'Git email cannot be empty.\n' >&2
+    done
+    git config --global user.email "$git_email"
 }
 
 apply_keyboard_replacements() {
@@ -420,7 +458,6 @@ HOME_FILES=(
     .shell_common
     .zprofile
     .zshrc
-    .ssh/config
     .config/ghostty/config.ghostty
     .config/starship.toml
     .codex/config.toml
@@ -446,17 +483,31 @@ install_codex_skills
 
 if [ "$PLATFORM" = macos ]; then
     VSCODE_DIR="$HOME/Library/Application Support/Code/User"
+elif [ -n "${WSL_DISTRO_NAME:-}" ] || grep -qi microsoft /proc/version; then
+    CODE_BIN="$(command -v code 2>/dev/null || true)"
+    case "$CODE_BIN" in
+        */AppData/Local/Programs/Microsoft\ VS\ Code/bin/code)
+            WINDOWS_PROFILE="${CODE_BIN%%/AppData/Local/Programs/Microsoft VS Code/bin/code}"
+            VSCODE_DIR="$WINDOWS_PROFILE/AppData/Roaming/Code/User"
+            ;;
+        *)
+            die "Cannot locate the Windows VS Code profile from the 'code' command at ${CODE_BIN:-not found}."
+            ;;
+    esac
+    copy_config "$REPO_DIR/apps/vscode/settings.json" "$VSCODE_DIR/settings.json"
+    copy_config "$REPO_DIR/apps/vscode/keybindings.json" "$VSCODE_DIR/keybindings.json"
 else
     VSCODE_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/Code/User"
+    link_config "$REPO_DIR/apps/vscode/settings.json" "$VSCODE_DIR/settings.json"
+    link_config "$REPO_DIR/apps/vscode/keybindings.json" "$VSCODE_DIR/keybindings.json"
 fi
-link_config "$REPO_DIR/apps/vscode/settings.json" "$VSCODE_DIR/settings.json"
-link_config "$REPO_DIR/apps/vscode/keybindings.json" "$VSCODE_DIR/keybindings.json"
 install_vscode_extensions
 if [ "$PLATFORM" = macos ]; then
     apply_keyboard_replacements
     refresh_keyboard_services
 fi
 
+configure_git_identity
 configure_git_delta
 remove_legacy_gpg_wrapper
 

@@ -50,37 +50,12 @@ brew uninstall docker docker-compose docker-buildx
 
 Bootstrap does not remove these formulae automatically.
 
-## SSH and Git signing
-
-Load both keys and configure the workstation:
-
-```sh
-ssh-add ~/.ssh/ai-machine-gpu && ssh-add ~/.ssh/github_signing && ./bootstrap.sh --skip-brew --skip-apt
-```
-
-Install the login and signing public keys, then configure both machines:
-
-```sh
-for host in old new; do cat ~/.ssh/ai-machine-gpu.pub | ssh "$host" 'umask 077; mkdir -p ~/.ssh; key=$(cat); grep -qxF "$key" ~/.ssh/authorized_keys 2>/dev/null || printf "%s\n" "$key" >> ~/.ssh/authorized_keys'; scp ~/.ssh/github_signing.pub "$host":~/.ssh/github_signing.pub; ssh "$host" 'cd ~/dotfiles && ./bootstrap.sh --skip-brew --skip-apt'; done
-```
-
-Register the signing key with GitHub once:
-
-```sh
-gh ssh-key add ~/.ssh/github_signing.pub --type signing --title "Git signing"
-```
-
-Verify:
-
-```sh
-ssh -o PreferredAuthentications=publickey -o PasswordAuthentication=no old true && ssh -o PreferredAuthentications=publickey -o PasswordAuthentication=no new true && ssh new 'ssh-add -L'
-```
-
 ## Managed configuration
 
-1. Managed: shell, SSH, Ghostty, Starship, Git signing, VS Code, and Codex CLI.
-2. Codex includes managed defaults, worktree helpers, and turn diffs.
-3. macOS keyboard replacements are in `apps/macos/`.
+1. Managed: shell, Ghostty, Starship, VS Code, Git identity, and Codex CLI.
+2. Bootstrap sets the global Git name to `wglazer` and asks for an email if one is not configured.
+3. Codex includes managed defaults, worktree helpers, and turn diffs.
+4. macOS keyboard replacements are in `apps/macos/`.
 
 ## Opinions
 
