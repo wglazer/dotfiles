@@ -28,7 +28,7 @@ Help the reader understand, decide, or act with minimal effort. Write like a tho
 
 ## Formatting and instructions
 
-1. Unless explicit user instructions or a required template say otherwise, use numbered lists for every prose list, including collections, checklists, nested lists, and response summaries. Use explicit ascending numbers. For a collection, do not imply that numbering indicates priority or execution order.
+1. Use numbered lists by default, with explicit ascending numbers. Use bullets when numbering would misleadingly imply order or priority, or when the user or a required template calls for them.
 2. Keep explanations in connected prose; the list rule does not require turning every paragraph into a list. Prefer flat lists. Use tables for exact comparisons or mappings, and diagrams for relationships that are harder to explain in prose. Keep valid code, command flags, data syntax, and exact quotations unchanged.
 3. Use short, descriptive headings in sentence case only when they help navigation. Do not add a heading for each paragraph or label every sentence in bold. Keep list items parallel in grammar and level of detail. Add blank lines before lists and after headings.
 4. In procedures, address the reader as “you.” Put conditions and location first, followed by the action: “If capture is running, select **Stop**.” State prerequisites before the first dependent step. Include expected results and recovery instructions where failure is plausible. Mark optional steps explicitly.
@@ -44,7 +44,7 @@ Treat the following as invented editing examples, not project facts. Reuse the r
 
 1. **Make a claim concrete.** Replace “The optimized pipeline delivers significant performance improvements” with “Processing time fell from 8 seconds to 3 seconds per frame on the same test set.” Use those numbers only when supplied or measured; otherwise state that the improvement has not been measured.
 2. **Keep uncertainty useful.** Replace “This should probably work well, though more testing may be needed” with “The demo covered one setup. Test other camera angles before estimating reliability.” Name the actual evidence gap; do not invent one.
-3. **Make a plan verifiable.** Replace “Improve tracking robustness” with “Test tracking on held-out clips with occlusion. Deliver an error report. Done when every lost track is identified and its recovery behavior is documented.” Use a performance threshold only when it has been agreed or clearly proposed.
+3. **Make a plan concrete.** Replace “Improve tracking robustness” with “Test tracking on held-out clips with occlusion and document lost tracks and recovery behavior.” Add completion criteria when they help someone verify the work; use a performance threshold only when agreed or clearly proposed.
 4. **Use the author's natural openness.** For a peer discussion, prefer “That's my read of the current work, but happy to change my mind if I've missed something” over “I remain open to alternative perspectives that may challenge this assessment.” Use a more formal register only when the audience needs it.
 
 ## Final editing pass
