@@ -1,7 +1,7 @@
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
-model = "gpt-6-luna"
-model_reasoning_effort = "high"
+model = "gpt-6.1-terra"
+model_reasoning_effort = "medium"
 
 [features]
 worktrees = false
@@ -12,6 +12,7 @@ max_context_tokens = 10000
 
 [tui]
 vim_mode_default = true
+resume_cwd = "session"
 status_line = ["model-with-reasoning", "current-dir", "context-used", "five-hour-limit"]
 screen_reader_detection_done = true
 
@@ -19,6 +20,9 @@ screen_reader_detection_done = true
 "gpt-6.1-sol" = 4
 
 [projects."/home/wglazer/dotfiles"]
+trust_level = "trusted"
+
+[projects."/Users/william.glazer-cavanagh/Documents/dev/dotfiles"]
 trust_level = "trusted"
 
 [hooks.state]
@@ -29,9 +33,27 @@ trusted_hash = "sha256:3ef7765de8a4608872feefa374b9bf2116f4ea1af1183bf065d1a8228
 [hooks.state."/home/wglazer/.codex/hooks.json:stop:0:0"]
 trusted_hash = "sha256:43f6bd7a459926da8da4b6f4bbeb5e980a735084d1194f9c6046c1d9ebbb6c4a"
 
+[hooks.state."/Users/william.glazer-cavanagh/.codex/hooks.json:user_prompt_submit:0:0"]
+trusted_hash = "sha256:3ef7765de8a4608872feefa374b9bf2116f4ea1af1183bf065d1a82281b3f8e1"
+
+[hooks.state."/Users/william.glazer-cavanagh/.codex/hooks.json:stop:0:0"]
+trusted_hash = "sha256:43f6bd7a459926da8da4b6f4bbeb5e980a735084d1194f9c6046c1d9ebbb6c4a"
+
+[hooks.state."i-have-adhd@i-have-adhd:hooks/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:f14f820a4bb04f568faf482695f08471d7ed733a25fd94181693a7be4f06a637"
+trusted_content_hash = "sha256:d4ed894106e1fe0b5a97c0edf6de140775f5a0864ff309917c316acb90f10036"
+
 [marketplaces.mattpocock]
 source_type = "git"
 source = "https://github.com/mattpocock/skills.git"
 
+[marketplaces.i-have-adhd]
+source_type = "git"
+source = "https://github.com/ayghri/i-have-adhd.git"
+ref = "main"
+
 [plugins."mattpocock-skills@mattpocock"]
+enabled = true
+
+[plugins."i-have-adhd@i-have-adhd"]
 enabled = true

@@ -6,14 +6,15 @@ description: >-
 
 # Write technical docs
 
-Help the reader understand, decide, or act with minimal effort. Write like a thoughtful engineer speaking to a capable colleague: direct, natural, precise, and open to contrary evidence. Apply the rules here without loading external style guides. Read project sources when needed to establish facts.
+Help the reader understand, decide, or act with minimal effort. Write like a thoughtful engineer speaking to a capable colleague: direct, natural, precise, and open to contrary evidence. Follow the user's instructions and project conventions when they differ from this guidance. Read project sources when needed to establish facts; consult external guides for specific questions when useful.
 
 ## Working method
 
 1. Identify the reader, their starting knowledge, and the question or task the text must resolve. Infer these from context. Ask only when missing information would materially change the result; otherwise proceed with a stated assumption when it matters.
 2. Gather only the evidence needed for that job. Preserve the author's meaning, terminology, and level of certainty. Distinguish existing behavior, proposals, observations, estimates, and unknowns. Never invent commands, results, citations, decisions, owners, or deadlines.
 3. Lead with the answer, recommendation, or requested decision. Then explain the problem, evidence, constraints, and reasoning in the order the reader needs them. Give prerequisites before dependent ideas; anticipate material objections where they arise.
-4. Use the smallest useful structure. Draft and apply the final editing pass. Deliver the requested text or edit directly; explain edits only when useful or requested.
+4. Match the requested scope: proofread for surface errors, make substantive changes when asked, or report findings without editing for a review-only request. Flag material problems outside the requested scope rather than silently rewriting them. Distinguish unverified claims from known errors.
+5. Use the smallest useful structure and apply the review lenses below. Deliver the requested text, edit, or findings; explain edits only when useful or requested.
 
 ## Voice and sentence rules
 
@@ -36,7 +37,7 @@ Help the reader understand, decide, or act with minimal effort. Write like a tho
 
 ## Match the structure to the job
 
-Consult [document types](document-types.md) for the relevant kind of document. Treat its guidance as content choices, not mandatory headings.
+For a document type covered by [document types](document-types.md), consult its guidance when shaping or reviewing the document. Treat it as content choices, not mandatory headings.
 
 ## Calibrate the output
 
@@ -47,17 +48,21 @@ Treat the following as invented editing examples, not project facts. Reuse the r
 3. **Make a plan concrete.** Replace “Improve tracking robustness” with “Test tracking on held-out clips with occlusion and document lost tracks and recovery behavior.” Add completion criteria when they help someone verify the work; use a performance threshold only when agreed or clearly proposed.
 4. **Use the author's natural openness.** For a peer discussion, prefer “That's my read of the current work, but happy to change my mind if I've missed something” over “I remain open to alternative perspectives that may challenge this assessment.” Use a more formal register only when the audience needs it.
 
-## Final editing pass
+## Review lenses
 
-1. Can the reader find the answer and its significance immediately, then follow the reasoning without reconstructing missing links?
-2. Are claims, certainty, terminology, examples, and instructions faithful to the evidence and the author's intent?
-3. Does every section earn its place? Remove text that adds no meaning, evidence, necessary context, or action. Keep caveats that change the decision.
-4. Are requirements and next steps verifiable? Does list formatting follow the applicable instructions? Return the result without appending this checklist or a style commentary.
+Apply the relevant lenses in proportion to the document and requested scope:
 
-## Source provenance
+1. **Purpose and reasoning:** Check that the reader can find the answer or action, follow the argument, and understand material constraints and trade-offs.
+2. **Evidence and usability:** Check claims and uncertainty against available evidence. For instructions, check prerequisites, steps, examples, and expected results against project sources when available; identify gaps that cannot be verified.
+3. **Clarity and voice:** Remove unnecessary text, make wording and terminology clear, and preserve the author's voice and meaningful caveats. Check formatting against applicable conventions.
 
-The practical guidance is distilled above. Treat these links as attribution and optional further reading, never required context. Apply the user's preferences when a source differs: preserve justified uncertainty and choose structure by need.
+For substantial or consequential documents, independent reviewers can examine distinct lenses when delegation is authorized and available. Give each reviewer the draft and a specific lens; request the location, problem, suggested fix, and supporting evidence or uncertainty. Reconcile findings and conflicts before delivering the result, preserving the author's intent. Otherwise apply the lenses yourself. Do not append this checklist to the output.
+
+## Sources
+
+The practical guidance is distilled above. These links are attribution and optional references, not required context. Apply the user's preferences when a source differs: preserve justified uncertainty and choose structure by need.
 
 1. [Grant Slatton: Writing a good design document](https://grantslatton.com/how-to-design-document) — reasoning order, reader knowledge, concise paragraphs, and optional supporting detail.
 2. [Alexandros Pappas: Write Like an Amazonian](https://medium.com/@apappascs/write-like-an-amazonian-14-tips-for-clear-and-persuasive-communication-e2a11afc7362) — reader purpose, concrete evidence, and economical language. Treat this as independent advice, not an official Amazon standard.
 3. [Google developer documentation style guide](https://developers.google.com/style/) — reader-focused instructions, consistent terms, clear formatting, and accessible language.
+4. [Docs for Developers](https://docsfordevelopers.com/) — optional further reading on developer documentation.
