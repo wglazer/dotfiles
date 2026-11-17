@@ -330,6 +330,7 @@ HOME_FILES=(
     .config/ghostty/config.ghostty .config/starship.toml
     .codex/config.toml .codex/AGENTS.md .codex/hooks.json
     .codex/hooks/turn-diff.js .codex/skills/software-design-philosophy
+    .codex/skills/technical-docs
     .local/bin/turn-diff .local/bin/dotfiles-alias
 )
 for relative_path in "${HOME_FILES[@]}"; do

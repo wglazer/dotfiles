@@ -1,0 +1,63 @@
+---
+name: technical-docs
+description: >-
+  Write and edit technical prose in William's voice: plain, brief, concrete, and evidence-led, with numbered lists by default. Use for design docs, RFCs, requirements, READMEs, implementation plans, technical explanations, project updates, PR descriptions, and commit messages; also use when asked to improve the clarity, concision, structure, or style of technical prose.
+---
+
+# Write technical docs
+
+Help the reader understand, decide, or act with minimal effort. Write like a thoughtful engineer speaking to a capable colleague: direct, natural, precise, and open to contrary evidence. Apply the rules here without loading external style guides. Read project sources when needed to establish facts.
+
+## Working method
+
+1. Identify the reader, their starting knowledge, and the question or task the text must resolve. Infer these from context. Ask only when missing information would materially change the result; otherwise proceed with a stated assumption when it matters.
+2. Gather only the evidence needed for that job. Preserve the author's meaning, terminology, and level of certainty. Distinguish existing behavior, proposals, observations, estimates, and unknowns. Never invent commands, results, citations, decisions, owners, or deadlines.
+3. Lead with the answer, recommendation, or requested decision. Then explain the problem, evidence, constraints, and reasoning in the order the reader needs them. Give prerequisites before dependent ideas; anticipate material objections where they arise.
+4. Use the smallest useful structure. Draft and apply the final editing pass. Deliver the requested text or edit directly; explain edits only when useful or requested.
+
+## Voice and sentence rules
+
+1. Use plain verbs and concrete nouns: “use,” “check,” “send,” and “because.” Replace noun-heavy phrases: “perform validation of” becomes “validate.” Name who acts when responsibility matters. Use active voice by default; use passive voice when the actor is unknown or irrelevant.
+2. Keep one main idea per paragraph. Start with its point, then add the reason, evidence, or consequence. Keep sentences easy to parse; split long sentences when they carry separate ideas. Do not enforce a word limit or turn connected reasoning into fragments.
+3. Connect an action to its purpose and a finding to its implication. Explain technical details only to the depth this reader needs. Define unfamiliar terms before relying on them; use one term consistently for each concept. Keep domain concepts visible and low-level mechanics behind them unless those mechanics are the subject.
+4. Sound candid and collegial. Use natural contractions when they fit. Preserve useful phrasing from the author's draft; correct typos without copying them as a voice trait. Adapt formality to the audience without adding corporate polish or imitating casual chat in a formal document.
+5. Remove empty emphasis and filler: “very,” “really,” “it is important to note,” “in order to,” and “as mentioned above.” Avoid “delve,” “leverage,” “seamless,” “robust,” and “cutting-edge” when they substitute for an explanation. Keep a technical term when it has a precise meaning.
+6. State the point directly. Avoid rhetorical questions, canned openings or conclusions, self-congratulation, invented compound labels, and “This isn't X; it's Y” framing. Use a contrast only when it resolves a real ambiguity or explains a meaningful trade-off. Do not repeat the opening in a closing summary by default.
+7. Make claims auditable. Replace praise with an observed behavior, measurement, or concrete example when evidence exists. Give units, baseline, scope, and measurement conditions where interpretation depends on them. Do not manufacture numbers to make prose persuasive.
+8. Preserve real uncertainty. Replace vague hedging with the specific limitation and its consequence when known. Keep “may,” “could,” or “we expect” when warranted. Distinguish a target from a measured result, and a demonstration from evidence of general reliability. Do not turn correlation into causation or a hypothesis into a conclusion.
+
+## Formatting and instructions
+
+1. Unless explicit user instructions or a required template say otherwise, use numbered lists for every prose list, including collections, checklists, nested lists, and response summaries. Use explicit ascending numbers. For a collection, do not imply that numbering indicates priority or execution order.
+2. Keep explanations in connected prose; the list rule does not require turning every paragraph into a list. Prefer flat lists. Use tables for exact comparisons or mappings, and diagrams for relationships that are harder to explain in prose. Keep valid code, command flags, data syntax, and exact quotations unchanged.
+3. Use short, descriptive headings in sentence case only when they help navigation. Do not add a heading for each paragraph or label every sentence in bold. Keep list items parallel in grammar and level of detail. Add blank lines before lists and after headings.
+4. In procedures, address the reader as “you.” Put conditions and location first, followed by the action: “If capture is running, select **Stop**.” State prerequisites before the first dependent step. Include expected results and recovery instructions where failure is plausible. Mark optional steps explicitly.
+5. Use code formatting for identifiers, paths, commands, and literal values; bold exact UI labels. Define placeholders and provide a minimal working example when useful. Use descriptive link text and meaningful image descriptions. State dates, time zones, units, and versions unambiguously when relevant. Preserve the document's language and spelling convention.
+
+## Match the structure to the job
+
+Consult [document types](document-types.md) for the relevant kind of document. Treat its guidance as content choices, not mandatory headings.
+
+## Calibrate the output
+
+Treat the following as invented editing examples, not project facts. Reuse the reasoning patterns, not their domain details.
+
+1. **Make a claim concrete.** Replace “The optimized pipeline delivers significant performance improvements” with “Processing time fell from 8 seconds to 3 seconds per frame on the same test set.” Use those numbers only when supplied or measured; otherwise state that the improvement has not been measured.
+2. **Keep uncertainty useful.** Replace “This should probably work well, though more testing may be needed” with “The demo covered one setup. Test other camera angles before estimating reliability.” Name the actual evidence gap; do not invent one.
+3. **Make a plan verifiable.** Replace “Improve tracking robustness” with “Test tracking on held-out clips with occlusion. Deliver an error report. Done when every lost track is identified and its recovery behavior is documented.” Use a performance threshold only when it has been agreed or clearly proposed.
+4. **Use the author's natural openness.** For a peer discussion, prefer “That's my read of the current work, but happy to change my mind if I've missed something” over “I remain open to alternative perspectives that may challenge this assessment.” Use a more formal register only when the audience needs it.
+
+## Final editing pass
+
+1. Can the reader find the answer and its significance immediately, then follow the reasoning without reconstructing missing links?
+2. Are claims, certainty, terminology, examples, and instructions faithful to the evidence and the author's intent?
+3. Does every section earn its place? Remove text that adds no meaning, evidence, necessary context, or action. Keep caveats that change the decision.
+4. Are requirements and next steps verifiable? Does list formatting follow the applicable instructions? Return the result without appending this checklist or a style commentary.
+
+## Source provenance
+
+The practical guidance is distilled above. Treat these links as attribution and optional further reading, never required context. Apply the user's preferences when a source differs: preserve justified uncertainty and choose structure by need.
+
+1. [Grant Slatton: Writing a good design document](https://grantslatton.com/how-to-design-document) — reasoning order, reader knowledge, concise paragraphs, and optional supporting detail.
+2. [Alexandros Pappas: Write Like an Amazonian](https://medium.com/@apappascs/write-like-an-amazonian-14-tips-for-clear-and-persuasive-communication-e2a11afc7362) — reader purpose, concrete evidence, and economical language. Treat this as independent advice, not an official Amazon standard.
+3. [Google developer documentation style guide](https://developers.google.com/style/) — reader-focused instructions, consistent terms, clear formatting, and accessible language.
