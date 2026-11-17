@@ -150,9 +150,10 @@ json_has_field_value() {
 
 ensure_codex_plugin() {
     local source="$1" marketplace="$2" plugin="$3" marketplaces installed add_output
+    shift 3
     marketplaces="$(codex plugin marketplace list --json)" || return $?
     if ! json_has_field_value "$marketplaces" name "$marketplace"; then
-        if ! add_output="$(codex plugin marketplace add "$source" 2>&1)"; then
+        if ! add_output="$(codex plugin marketplace add "$source" "$@" 2>&1)"; then
             if [[ "$add_output" == *"already added from a different source"* ]]; then
                 return 2
             fi
@@ -170,14 +171,15 @@ ensure_codex_plugin() {
 
 install_codex_skills() {
     if [ "$DRY_RUN" -eq 1 ]; then
-        printf '[dry-run] Would install Ponytail and Matt Pocock Codex plugins if the Codex CLI is available.\n'
+        printf '[dry-run] Would install Ponytail, Matt Pocock, and i-have-adhd Codex plugins if the Codex CLI is available.\n'
         return 0
     fi
     if ! command -v codex >/dev/null 2>&1; then
-        printf 'Codex CLI not found; install Codex and rerun bootstrap to install Ponytail and Matt Pocock skills.\n'
+        printf 'Codex CLI not found; install Codex and rerun bootstrap to install Codex plugins.\n'
         return 0
     fi
     ensure_codex_plugin mattpocock/skills mattpocock mattpocock-skills
+    ensure_codex_plugin ayghri/i-have-adhd i-have-adhd i-have-adhd --ref main
     local status
     if ensure_codex_plugin DietrichGebert/ponytail ponytail ponytail; then
         return 0
